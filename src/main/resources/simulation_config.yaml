@@ -1,0 +1,4 @@
+islandDimensions:
+  x: 10
+  y: 10
+simulationLength: 30
