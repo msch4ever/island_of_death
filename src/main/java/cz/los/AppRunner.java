@@ -1,5 +1,6 @@
 package cz.los;
 
+import cz.los.config.AnimalsConfig;
 import cz.los.config.SimulationConfig;
 
 public class AppRunner {
@@ -17,6 +18,7 @@ public class AppRunner {
 
     private static void initConfigs() {
         SimulationConfig config = SimulationConfig.getInstance();
+        AnimalsConfig animalsConfig = AnimalsConfig.getInstance();
         System.out.println("lol");
     }
 
