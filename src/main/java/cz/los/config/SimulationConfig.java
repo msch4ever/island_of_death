@@ -20,7 +20,7 @@ public class SimulationConfig {
 
     @Getter
     @NoArgsConstructor
-    private static class IslandDimensions {
+    public static class IslandDimensions {
         int x;
         int y;
     }
