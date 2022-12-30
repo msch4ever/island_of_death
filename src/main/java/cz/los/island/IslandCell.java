@@ -23,7 +23,7 @@ public class IslandCell {
         this.y = y;
         this.animals = Collections.synchronizedList(new ArrayList<>());
         this.vegetation =
-                new Vegetation(new Random().nextInt(100, SimulationConfig.getInstance().getMaxVegetationLevel()));
+                new Vegetation(new Random().nextInt(SimulationConfig.getInstance().getMaxVegetationLevel()));
     }
 
     public String lightToString() {

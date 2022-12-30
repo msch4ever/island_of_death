@@ -76,7 +76,7 @@ public abstract class Animal implements Eatable, Runnable {
         int trysCount = 0;
         do {
             switch (Direction.prickRandomDirection()) {
-                case UP -> {
+                case UP : {
                     int nextY = position.getY() - 1;
                     if (isPossibleToGoThereVertically(nextY)) {
                         IslandCell potentialDestination = Island.getInstance().getCell(position.getY(), nextY);
@@ -85,8 +85,9 @@ public abstract class Animal implements Eatable, Runnable {
                         }
                         trysCount++;
                     }
+                    break;
                 }
-                case DOWN -> {
+                case DOWN : {
                     int nextY = position.getY() + 1;
                     if (isPossibleToGoThereVertically(nextY)) {
                         IslandCell potentialDestination = Island.getInstance().getCell(position.getY(), nextY);
@@ -95,8 +96,9 @@ public abstract class Animal implements Eatable, Runnable {
                         }
                         trysCount++;
                     }
+                    break;
                 }
-                case LEFT -> {
+                case LEFT : {
                     int nextX = position.getX() - 1;
                     if (isPossibleToGoThereHorizontally(nextX)) {
                         IslandCell potentialDestination = Island.getInstance().getCell(nextX, position.getY());
@@ -105,8 +107,9 @@ public abstract class Animal implements Eatable, Runnable {
                         }
                         trysCount++;
                     }
+                    break;
                 }
-                case RIGHT -> {
+                case RIGHT : {
                     int nextX = position.getY() + 1;
                     if (isPossibleToGoThereHorizontally(nextX)) {
                         IslandCell potentialDestination = Island.getInstance().getCell(nextX, position.getY());
@@ -115,6 +118,7 @@ public abstract class Animal implements Eatable, Runnable {
                         }
                         trysCount++;
                     }
+                    break;
                 }
             }
         } while (trysCount < 5);

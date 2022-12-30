@@ -40,12 +40,12 @@ public class AnimalsConfig {
                 while (reader.ready()) {
                     String[] line = reader.readLine().replace(" ", "").split(",");
                     switch (line[0]) {
-                        case ("goat") ->
+                        case ("goat") :
                                 animalProperties.put(GOAT, createAnimalProps(AnimalProperties.getRootConstructor(GoatProperties.class), line));
-                        case ("wolf") ->
+                        case ("wolf") :
                                 animalProperties.put(WOLF, createAnimalProps(AnimalProperties.getRootConstructor(WolfProperties.class), line));
                         //default -> throw new RuntimeException("Unrecognised animal type:" + line[0]); ToDo
-                        default -> System.out.println("Unrecognised animal type: " + line[0]);
+                        default : System.out.println("Unrecognised animal type: " + line[0]);
                     }
                 }
             } catch (Exception e) {
