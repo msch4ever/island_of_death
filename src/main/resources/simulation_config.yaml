@@ -2,5 +2,6 @@ islandDimensions:
   x: 5
   y: 5
 simulationLength: 30
+dayLengthInSecs: 15
 maxVegetationLevel: 200
 growFactor: 1.5

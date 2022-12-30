@@ -33,7 +33,7 @@ public class AppRunner {
         Island island = Island.getInstance();
     }
 
-    private static void populateIsland() {
+    public static void populateIsland() {
         Island island = Island.getInstance();
         Random positionPicker = new Random();
         AnimalsConfig.getInstance().getAnimalProperties().values().forEach(animalProperties -> {

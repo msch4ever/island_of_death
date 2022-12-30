@@ -13,6 +13,7 @@ public class SimulationConfig {
 
     private IslandDimensions islandDimensions;
     private int simulationLength;
+    private int dayLengthInSecs;
     private int maxVegetationLevel;
     private double growFactor;
 
