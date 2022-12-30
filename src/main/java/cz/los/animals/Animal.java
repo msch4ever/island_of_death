@@ -48,6 +48,14 @@ public abstract class Animal implements Eatable, Runnable {
         consumeEnergy();
     }
 
+    public void setPosition(IslandCell islandCell) {
+        if (!changeCell(islandCell)) {
+            String error = String.format(ANIMAL_INFO.replace("{}", "%s") + ". Position setting is impossible.", getAnimalName(), id);
+            log.error(error);
+            throw new RuntimeException(error);
+        }
+    }
+
     private void move() {
         log.info(ANIMAL_INFO + " starts moving.", getAnimalName(), id);
         Random decider = new Random();

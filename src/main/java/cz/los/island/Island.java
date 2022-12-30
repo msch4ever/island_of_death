@@ -1,15 +1,21 @@
 package cz.los.island;
 
+import cz.los.animals.Animal;
 import cz.los.config.SimulationConfig;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Value
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class Island {
 
     IslandCell[][] island;
+    List<Animal> animals = Collections.synchronizedList(new ArrayList<>());
 
     public IslandCell getCell(int x, int y) {
         return island[y][x];

@@ -9,7 +9,7 @@ public class SandBox {
 
     public static void main(String[] args) {
         AnimalFactory factory = new AnimalFactory();
-        AnimalProperties properties = new GoatProperties(1, 1, 1, 1.0, 1.0, 1, 1, 1);
+        AnimalProperties properties = new GoatProperties(1, 1, 1.0, 1.0, 1, 1, 1, 1, 1);
         Animal animal = factory.createAnimal(properties);
     }
 

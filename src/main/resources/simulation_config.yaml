@@ -1,4 +1,6 @@
 islandDimensions:
-  x: 10
-  y: 10
+  x: 5
+  y: 5
 simulationLength: 30
+maxVegetationLevel: 200
+growFactor: 1.5

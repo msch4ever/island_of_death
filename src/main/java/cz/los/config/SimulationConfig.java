@@ -13,6 +13,8 @@ public class SimulationConfig {
 
     private IslandDimensions islandDimensions;
     private int simulationLength;
+    private int maxVegetationLevel;
+    private double growFactor;
 
     public static SimulationConfig getInstance() {
         return Keeper.instance;

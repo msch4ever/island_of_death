@@ -5,11 +5,11 @@ import cz.los.animals.AnimalProperties;
 
 public class GoatProperties extends AnimalProperties {
 
-    public GoatProperties(int weight, int range, int maxAmountInCell, double stomachCapacity,
-                          double dailyEnergyConsumption, int pregnancyDuration, int deathFromStarvingAfter,
-                          int maxLitterSize) {
-        super(weight, range, maxAmountInCell, stomachCapacity, dailyEnergyConsumption, pregnancyDuration,
-                deathFromStarvingAfter, maxLitterSize);
+    public GoatProperties(double weight, int range, double stomachCapacity, double dailyEnergyConsumption,
+                          int pregnancyDuration, int deathFromStarvingAfter, int maxLitterSize, int maxAmountInCell,
+                          int initialQuantity) {
+        super(weight, range, stomachCapacity, dailyEnergyConsumption, pregnancyDuration, deathFromStarvingAfter,
+                maxLitterSize, maxAmountInCell, initialQuantity);
     }
 
     @Override
