@@ -13,14 +13,25 @@ import java.util.Random;
 @AllArgsConstructor
 public class Vegetation implements Eatable {
 
+    static {
+        MAX_VEGETATION_LEVEL = SimulationConfig.getInstance().getMaxVegetationLevel();
+        GROW_FACTOR = SimulationConfig.getInstance().getGrowFactor();
+    }
+
     private static final int MAX_VEGETATION_LEVEL;
+
     private static final double GROW_FACTOR;
 
-    private int vegetation;
+    private double vegetation;
 
     @Override
-    public double getEatableMass() {
-        return vegetation;
+    public synchronized double consumeAsFood(double required) {
+        if (vegetation >= required) {
+            this.vegetation = this.vegetation - required;
+            return required;
+        }
+        this.vegetation = 0;
+        return this.vegetation;
     }
 
     public void grow() {
@@ -41,10 +52,5 @@ public class Vegetation implements Eatable {
             return true;
         }
         return false;
-    }
-
-    static {
-        MAX_VEGETATION_LEVEL = SimulationConfig.getInstance().getMaxVegetationLevel();
-        GROW_FACTOR = SimulationConfig.getInstance().getGrowFactor();
     }
 }

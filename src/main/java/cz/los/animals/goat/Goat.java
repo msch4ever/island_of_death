@@ -1,9 +1,9 @@
 package cz.los.animals.goat;
 
-import cz.los.animals.Animal;
 import cz.los.animals.AnimalType;
+import cz.los.animals.Herbivorous;
 
-public class Goat extends Animal {
+public class Goat extends Herbivorous {
 
     public Goat(GoatProperties properties) {
         super(properties);

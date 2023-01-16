@@ -2,6 +2,6 @@ package cz.los.animals;
 
 public interface Eatable {
 
-    double getEatableMass();
+    double consumeAsFood(double required);
 
 }

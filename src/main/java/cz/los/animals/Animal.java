@@ -44,10 +44,12 @@ public abstract class Animal implements Eatable, Runnable {
             return;
         }
         move();
-        //eat();
+        getFood();
         //reproduce();
         consumeEnergy();
     }
+
+    public abstract double getEatableMass();
 
     private void move() {
         log.info(ANIMAL_INFO + " starts moving.", getAnimalName(), id);
@@ -64,6 +66,8 @@ public abstract class Animal implements Eatable, Runnable {
         }
         log.info(ANIMAL_INFO + "finished moving.", getAnimalName(), id);
     }
+
+    protected abstract void getFood();
 
     private void moveToNextCell() {
         int trysCount = 0;
@@ -174,16 +178,29 @@ public abstract class Animal implements Eatable, Runnable {
         }
     }
 
-    private void eat(Eatable eatable) {
-        double eatableMass = eatable.getEatableMass();
-        currentStomachLevel = currentStomachLevel + eatableMass;
-        if (currentStomachLevel == properties.getStomachCapacity()) {
+    protected void eat(Eatable eatable) {
+        double consumed = eatable.consumeAsFood(properties.getStomachCapacity());
+        currentStomachLevel = currentStomachLevel + consumed;
+        if (currentStomachLevel >= properties.getStomachCapacity()) {
             currentStomachLevel = properties.getStomachCapacity();
         }
         daysWithoutFood = -1;
     }
 
     public abstract AnimalType getAnimalName();
+
+    @Override
+    public synchronized double consumeAsFood(double required) {
+        double consumed;
+        if (getEatableMass() >= required) {
+            consumed = required;
+        } else {
+            consumed = getEatableMass();
+        }
+        this.alive = false;
+        this.position.removeFromAnimals(this);
+        return consumed;
+    }
 
     @Override
     public String toString() {
