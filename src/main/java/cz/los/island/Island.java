@@ -6,16 +6,14 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Value
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class Island {
 
     IslandCell[][] island;
-    List<Animal> animals = Collections.synchronizedList(new ArrayList<>());
+    Set<Animal> animals = Collections.synchronizedSet(new HashSet<>());
 
     public IslandCell getCell(int x, int y) {
         return island[y][x];
@@ -47,5 +45,12 @@ public class Island {
             }
             instance = new Island(island);
         }
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Island with dimensions x:%s y:%s Current population: %s",
+                island.length, island[0].length,
+                animals.stream().filter(Animal::isAlive).count());
     }
 }

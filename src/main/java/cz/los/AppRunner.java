@@ -5,6 +5,7 @@ import cz.los.config.AnimalsConfig;
 import cz.los.config.SimulationConfig;
 import cz.los.island.Island;
 import cz.los.island.IslandCell;
+import cz.los.simulation.Engine;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Random;
@@ -20,33 +21,43 @@ public class AppRunner {
         initConfigs();
         createIsland();
         populateIsland();
-        /*runSimulation();*/
         log.info("Island was created and populated.");
+        runSimulation();
     }
 
     private static void initConfigs() {
-        SimulationConfig config = SimulationConfig.getInstance();
-        AnimalsConfig animalsConfig = AnimalsConfig.getInstance();
+        SimulationConfig.getInstance();
+        AnimalsConfig.getInstance();
     }
 
     private static void createIsland() {
-        Island island = Island.getInstance();
+        Island.getInstance();
     }
 
-    public static void populateIsland() {
+    private static void populateIsland() {
         Island island = Island.getInstance();
+        log.info("Populating island. {}", island);
         Random positionPicker = new Random();
         AnimalsConfig.getInstance().getAnimalProperties().values().forEach(animalProperties -> {
+            log.info("Creating {} population...", animalProperties.getType());
+            IslandCell position;
             for (int i = 0; i < animalProperties.getInitialQuantity(); i++) {
                 Animal newAnimal = animalProperties.createAnimal();
-                int x = positionPicker.nextInt(island.getWidth());
-                int y = positionPicker.nextInt(island.getHeight());
-                IslandCell position = island.getCell(x, y);
-                newAnimal.setPosition(position);
+                do {
+                    int x = positionPicker.nextInt(island.getWidth());
+                    int y = positionPicker.nextInt(island.getHeight());
+                    position = island.getCell(x, y);
+                } while (!newAnimal.setCell(position));
                 island.getAnimals().add(newAnimal);
-                position.getAnimals().add(newAnimal);
             }
         });
+        log.info("Island populated. {}", island);
+    }
+
+    private static void runSimulation() {
+        Engine engine = new Engine();
+        //engine.startSynchronous();
+        engine.start();
     }
 
 }

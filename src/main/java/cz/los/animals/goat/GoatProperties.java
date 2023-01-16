@@ -2,6 +2,7 @@ package cz.los.animals.goat;
 
 import cz.los.animals.Animal;
 import cz.los.animals.AnimalProperties;
+import cz.los.animals.AnimalType;
 
 public class GoatProperties extends AnimalProperties {
 
@@ -15,5 +16,10 @@ public class GoatProperties extends AnimalProperties {
     @Override
     public Animal createAnimal() {
         return new Goat(this);
+    }
+
+    @Override
+    public AnimalType getType() {
+        return AnimalType.GOAT;
     }
 }

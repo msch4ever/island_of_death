@@ -41,4 +41,6 @@ public abstract class AnimalProperties {
 
     public abstract Animal createAnimal();
 
+    public abstract AnimalType getType();
+
 }

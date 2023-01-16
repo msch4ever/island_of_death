@@ -41,19 +41,12 @@ public abstract class Animal implements Eatable, Runnable {
         log.info(ANIMAL_INFO + "starts daily routine.", getAnimalName(), id);
         if (!alive) {
             log.warn(ANIMAL_INFO + "is dead.", getAnimalName(), id);
+            return;
         }
         move();
         //eat();
         //reproduce();
         consumeEnergy();
-    }
-
-    public void setPosition(IslandCell islandCell) {
-        if (!changeCell(islandCell)) {
-            String error = String.format(ANIMAL_INFO.replace("{}", "%s") + ". Position setting is impossible.", getAnimalName(), id);
-            log.error(error);
-            throw new RuntimeException(error);
-        }
     }
 
     private void move() {
@@ -63,7 +56,7 @@ public abstract class Animal implements Eatable, Runnable {
             if (decider.nextBoolean()) {
                 IslandCell previous = position;
                 moveToNextCell();
-                if (previous != position) {
+                if (!previous.equals(this.position)) {
                     log.info(ANIMAL_INFO + " moved from {} to {}",
                             getAnimalName(), id, previous.lightToString(), position.lightToString());
                 }
@@ -76,64 +69,78 @@ public abstract class Animal implements Eatable, Runnable {
         int trysCount = 0;
         do {
             switch (Direction.prickRandomDirection()) {
-                case UP : {
+                case UP: {
                     int nextY = position.getY() - 1;
                     if (isPossibleToGoThereVertically(nextY)) {
                         IslandCell potentialDestination = Island.getInstance().getCell(position.getY(), nextY);
                         if (changeCell(potentialDestination)) {
-                            break;
+                            return;
                         }
                         trysCount++;
                     }
-                    break;
                 }
-                case DOWN : {
+                case DOWN: {
                     int nextY = position.getY() + 1;
                     if (isPossibleToGoThereVertically(nextY)) {
                         IslandCell potentialDestination = Island.getInstance().getCell(position.getY(), nextY);
                         if (changeCell(potentialDestination)) {
-                            break;
+                            return;
                         }
                         trysCount++;
                     }
-                    break;
                 }
-                case LEFT : {
+                case LEFT: {
                     int nextX = position.getX() - 1;
                     if (isPossibleToGoThereHorizontally(nextX)) {
                         IslandCell potentialDestination = Island.getInstance().getCell(nextX, position.getY());
                         if (changeCell(potentialDestination)) {
-                            break;
+                            return;
                         }
                         trysCount++;
                     }
-                    break;
                 }
-                case RIGHT : {
+                case RIGHT: {
                     int nextX = position.getY() + 1;
                     if (isPossibleToGoThereHorizontally(nextX)) {
                         IslandCell potentialDestination = Island.getInstance().getCell(nextX, position.getY());
                         if (changeCell(potentialDestination)) {
-                            break;
+                            return;
                         }
                         trysCount++;
                     }
-                    break;
                 }
             }
         } while (trysCount < 5);
     }
 
-    private boolean changeCell(IslandCell potentialDestination) {
+    public synchronized boolean setCell(IslandCell potentialDestination) {
         try {
-            boolean cellIsFull = checkIfCellIsFull(potentialDestination);
-            if (!cellIsFull) {
-                this.position = potentialDestination;
-                return true;
+            if (!potentialDestination.addToAnimals(this)) {
+                throw new RuntimeException("Could not add " + this + " to this cell.");
             }
-            Thread.sleep(1000);
+            this.position = potentialDestination;
+            return true;
         } catch (Exception e) {
-            log.warn(ANIMAL_INFO + " an error occurred while making a move", getAnimalName(), id);
+            log.error(ANIMAL_INFO + " an error occurred while making a move", getAnimalName(), id);
+            log.error(e.getMessage());
+        }
+        return false;
+    }
+
+    private synchronized boolean changeCell(IslandCell potentialDestination) {
+        try {
+            System.out.println(position.getAnimals().get(getAnimalName()).contains(this));
+            if (this.position.removeFromAnimals(this)) {
+                if (potentialDestination.addToAnimals(this)) {
+                    this.position = potentialDestination;
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        } catch (Exception e) {
+            log.error(ANIMAL_INFO + " an error occurred while making a move", getAnimalName(), id);
+            log.error(e.getMessage());
         }
         return false;
     }
@@ -146,21 +153,23 @@ public abstract class Animal implements Eatable, Runnable {
         return x != Island.getInstance().getWidth() && x != -1;
     }
 
-    private boolean checkIfCellIsFull(IslandCell potentialDestination) {
-        long currentAmountOfPopulation =
-                potentialDestination.getAnimals().stream().filter(it -> it.getAnimalName() == getAnimalName()).count();
-        return currentAmountOfPopulation > properties.getMaxAmountInCell();
-    }
-
     private void consumeEnergy() {
         currentStomachLevel = currentStomachLevel - properties.getDailyEnergyConsumption();
         if (currentStomachLevel <= 0) {
-            log.info(ANIMAL_INFO + "started starving.", id, getAnimalName());
             currentStomachLevel = 0;
             daysWithoutFood++;
+            if (daysWithoutFood == 0) {
+                log.info(ANIMAL_INFO + "started starving.", getAnimalName(), id);
+            } else {
+                log.info(ANIMAL_INFO + "starving.", getAnimalName(), id);
+            }
         }
 
         if (daysWithoutFood > properties.getDeathFromStarvingAfter()) {
+            log.info(ANIMAL_INFO + "DIED from starving.", getAnimalName(), id);
+            if (!position.removeFromAnimals(this)) {
+             log.error("Could not even remove dead guy from cell...");
+            }
             alive = false;
         }
     }
@@ -174,6 +183,30 @@ public abstract class Animal implements Eatable, Runnable {
         daysWithoutFood = -1;
     }
 
-    protected abstract AnimalType getAnimalName();
+    public abstract AnimalType getAnimalName();
 
+    @Override
+    public String toString() {
+        return "Animal{" +
+                "alive=" + alive +
+                ", daysWithoutFood=" + daysWithoutFood +
+                ", currentStomachLevel=" + currentStomachLevel +
+                ", position=" + position +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Animal)) return false;
+
+        Animal animal = (Animal) o;
+
+        return id.equals(animal.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

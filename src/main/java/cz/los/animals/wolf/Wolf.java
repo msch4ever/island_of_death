@@ -10,7 +10,7 @@ public class Wolf extends Animal {
     }
 
     @Override
-    protected AnimalType getAnimalName() {
+    public AnimalType getAnimalName() {
         return AnimalType.WOLF;
     }
 
