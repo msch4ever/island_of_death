@@ -10,7 +10,7 @@ public class Goat extends Herbivorous {
     }
 
     @Override
-    public AnimalType getAnimalName() {
+    public AnimalType getAnimalType() {
         return AnimalType.GOAT;
     }
 

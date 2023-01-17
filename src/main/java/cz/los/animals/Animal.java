@@ -14,7 +14,7 @@ import java.util.UUID;
 @Slf4j
 public abstract class Animal implements Eatable, Runnable {
 
-    private static final String ANIMAL_INFO = "{} id:{} ";
+    public static final String ANIMAL_INFO = "{} id:{} ";
 
     @Getter(AccessLevel.PROTECTED)
     private final AnimalProperties properties;
@@ -26,6 +26,7 @@ public abstract class Animal implements Eatable, Runnable {
     private int daysWithoutFood;
     private double currentStomachLevel;
 
+    @Getter(AccessLevel.PROTECTED)
     private IslandCell position;
 
     public Animal(AnimalProperties properties) {
@@ -38,9 +39,9 @@ public abstract class Animal implements Eatable, Runnable {
 
     @Override
     public void run() {
-        log.info(ANIMAL_INFO + "starts daily routine.", getAnimalName(), id);
+        log.info(ANIMAL_INFO + "starts daily routine.", getAnimalType(), id);
         if (!alive) {
-            log.warn(ANIMAL_INFO + "is dead.", getAnimalName(), id);
+            log.warn(ANIMAL_INFO + "is dead.", getAnimalType(), id);
             return;
         }
         move();
@@ -52,7 +53,7 @@ public abstract class Animal implements Eatable, Runnable {
     public abstract double getEatableMass();
 
     private void move() {
-        log.info(ANIMAL_INFO + " starts moving.", getAnimalName(), id);
+        log.info(ANIMAL_INFO + " starts moving.", getAnimalType(), id);
         Random decider = new Random();
         for (int move = 0; move < properties.getRange(); move++) {
             if (decider.nextBoolean()) {
@@ -60,11 +61,11 @@ public abstract class Animal implements Eatable, Runnable {
                 moveToNextCell();
                 if (!previous.equals(this.position)) {
                     log.info(ANIMAL_INFO + " moved from {} to {}",
-                            getAnimalName(), id, previous.lightToString(), position.lightToString());
+                            getAnimalType(), id, previous.lightToString(), position.lightToString());
                 }
             }
         }
-        log.info(ANIMAL_INFO + "finished moving.", getAnimalName(), id);
+        log.info(ANIMAL_INFO + "finished moving.", getAnimalType(), id);
     }
 
     protected abstract void getFood();
@@ -125,7 +126,7 @@ public abstract class Animal implements Eatable, Runnable {
             this.position = potentialDestination;
             return true;
         } catch (Exception e) {
-            log.error(ANIMAL_INFO + " an error occurred while making a move", getAnimalName(), id);
+            log.error(ANIMAL_INFO + " an error occurred while making a move", getAnimalType(), id);
             log.error(e.getMessage());
         }
         return false;
@@ -133,7 +134,6 @@ public abstract class Animal implements Eatable, Runnable {
 
     private synchronized boolean changeCell(IslandCell potentialDestination) {
         try {
-            System.out.println(position.getAnimals().get(getAnimalName()).contains(this));
             if (this.position.removeFromAnimals(this)) {
                 if (potentialDestination.addToAnimals(this)) {
                     this.position = potentialDestination;
@@ -143,7 +143,7 @@ public abstract class Animal implements Eatable, Runnable {
             }
             return false;
         } catch (Exception e) {
-            log.error(ANIMAL_INFO + " an error occurred while making a move", getAnimalName(), id);
+            log.error(ANIMAL_INFO + " an error occurred while making a move", getAnimalType(), id);
             log.error(e.getMessage());
         }
         return false;
@@ -163,14 +163,14 @@ public abstract class Animal implements Eatable, Runnable {
             currentStomachLevel = 0;
             daysWithoutFood++;
             if (daysWithoutFood == 0) {
-                log.info(ANIMAL_INFO + "started starving.", getAnimalName(), id);
+                log.info(ANIMAL_INFO + "started starving.", getAnimalType(), id);
             } else {
-                log.info(ANIMAL_INFO + "starving.", getAnimalName(), id);
+                log.info(ANIMAL_INFO + "starving.", getAnimalType(), id);
             }
         }
 
         if (daysWithoutFood > properties.getDeathFromStarvingAfter()) {
-            log.info(ANIMAL_INFO + "DIED from starving.", getAnimalName(), id);
+            log.info(ANIMAL_INFO + "DIED from starving.", getAnimalType(), id);
             if (!position.removeFromAnimals(this)) {
              log.error("Could not even remove dead guy from cell...");
             }
@@ -187,7 +187,7 @@ public abstract class Animal implements Eatable, Runnable {
         daysWithoutFood = -1;
     }
 
-    public abstract AnimalType getAnimalName();
+    public abstract AnimalType getAnimalType();
 
     @Override
     public synchronized double consumeAsFood(double required) {

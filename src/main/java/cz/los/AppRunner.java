@@ -56,8 +56,8 @@ public class AppRunner {
 
     private static void runSimulation() {
         Engine engine = new Engine();
-        //engine.startSynchronous();
-        engine.start();
+        engine.startSynchronous();
+        //engine.start();
     }
 
 }

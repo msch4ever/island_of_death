@@ -29,7 +29,7 @@ public class IslandCell implements Runnable {
     }
 
     public synchronized boolean addToAnimals(Animal animal) {
-        AnimalType animalType = animal.getAnimalName();
+        AnimalType animalType = animal.getAnimalType();
         int currentPopulation = animals.computeIfAbsent(animalType, (k) -> new HashSet<>()).size();
         int maxAmountInCell = AnimalsConfig.getInstance().getAnimalProperties().get(animalType).getMaxAmountInCell();
         if (currentPopulation > maxAmountInCell) {
@@ -40,7 +40,7 @@ public class IslandCell implements Runnable {
     }
 
     public synchronized boolean removeFromAnimals(Animal animal) {
-        return animals.get(animal.getAnimalName()).remove(animal);
+        return animals.get(animal.getAnimalType()).remove(animal);
     }
 
     @Override

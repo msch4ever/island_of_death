@@ -11,7 +11,7 @@ public class Wolf extends Predator {
     }
 
     @Override
-    public AnimalType getAnimalName() {
+    public AnimalType getAnimalType() {
         return AnimalType.WOLF;
     }
 
