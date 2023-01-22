@@ -1,5 +1,6 @@
 package cz.los.animals.goat;
 
+import cz.los.animals.AnimalProperties;
 import cz.los.animals.AnimalType;
 import cz.los.animals.Herbivorous;
 import cz.los.animals.wolf.Wolf;
@@ -8,7 +9,7 @@ import cz.los.animals.wolf.Wolf;
 public class Goat extends Herbivorous {
 
 
-    public Goat(GoatProperties properties) {
+    public Goat(AnimalProperties properties) {
         super(properties);
     }
 

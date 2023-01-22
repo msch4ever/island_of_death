@@ -1,13 +1,13 @@
 package cz.los.island;
 
 import cz.los.animals.Animal;
-import cz.los.config.SimulationConfig;
 import cz.los.config.SimulationConfigStatic;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 @Value
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -36,9 +36,6 @@ public class Island {
         private static final Island instance;
 
         static {
-            SimulationConfig config = SimulationConfig.getInstance();
-            /*IslandCell[][] island =
-                    new IslandCell[config.getIslandDimensions().getX()][config.getIslandDimensions().getY()];*/
             IslandCell[][] island =
                     new IslandCell[SimulationConfigStatic.xDimension][SimulationConfigStatic.yDimension];
             for (int y = 0; y < island[0].length; y++) {
@@ -52,8 +49,27 @@ public class Island {
 
     @Override
     public String toString() {
-        return String.format("Island with dimensions x:%s y:%s Current population: %s",
+        return String.format("Island with dimensions x:%s y:%s \nCurrent population: %s\nCurrent vegetation: %s",
                 island.length, island[0].length,
-                animals.stream().filter(Animal::isAlive).count());
+                animals.stream().filter(Animal::isAlive).count(),
+                getVegetationLevelFunctional());
+    }
+
+    private double getVegetationLevelFunctional() {
+        return Stream.of(island)
+                .flatMap(Stream::of)
+                .map(it -> it.getVegetation().getVegetationLevel())
+                .mapToDouble(Double::doubleValue)
+                .sum();
+    }
+
+    private double getVegetationLevel() {
+        double totalVegetation = 0;
+        for(IslandCell[] islandCells : island) {
+            for (IslandCell islandCell : islandCells) {
+                totalVegetation += islandCell.getVegetation().getVegetationLevel();
+            }
+        }
+        return totalVegetation;
     }
 }

@@ -22,33 +22,33 @@ public class Vegetation implements Eatable {
 
     private static final double GROW_FACTOR;
 
-    private double vegetation;
+    private double vegetationLevel;
 
     @Override
     public synchronized double consumeAsFood(double required) {
-        if (vegetation >= required) {
-            this.vegetation = this.vegetation - required;
+        if (vegetationLevel >= required) {
+            this.vegetationLevel = this.vegetationLevel - required;
             return required;
         }
-        this.vegetation = 0;
-        return this.vegetation;
+        this.vegetationLevel = 0;
+        return this.vegetationLevel;
     }
 
     public void grow() {
-        if (vegetation < 1) {
+        if (vegetationLevel < 1) {
             if (!touchOfGod()) {
                 log.warn("Cannot grow vegetation as there is no life here");
                 return;
             }
         }
-        vegetation = (int) (vegetation * GROW_FACTOR);
+        vegetationLevel = (int) (vegetationLevel * GROW_FACTOR);
     }
 
     private boolean touchOfGod() {
         Random god = new Random();
         if (god.nextInt(1000) < 11) {
             log.info("It was a touch of God - a true miracle. There is hope for this vegetation now.");
-            vegetation = (int) (SimulationConfig.getInstance().getMaxVegetationLevel() * 0.1);
+            vegetationLevel = (int) (SimulationConfig.getInstance().getMaxVegetationLevel() * 0.1);
             return true;
         }
         return false;
