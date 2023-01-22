@@ -2,6 +2,7 @@ package cz.los.island;
 
 import cz.los.animals.Animal;
 import cz.los.config.SimulationConfig;
+import cz.los.config.SimulationConfigStatic;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
@@ -36,8 +37,10 @@ public class Island {
 
         static {
             SimulationConfig config = SimulationConfig.getInstance();
+            /*IslandCell[][] island =
+                    new IslandCell[config.getIslandDimensions().getX()][config.getIslandDimensions().getY()];*/
             IslandCell[][] island =
-                    new IslandCell[config.getIslandDimensions().getX()][config.getIslandDimensions().getY()];
+                    new IslandCell[SimulationConfigStatic.xDimension][SimulationConfigStatic.yDimension];
             for (int y = 0; y < island[0].length; y++) {
                 for (int x = 0; x < island.length; x++) {
                     island[y][x] = new IslandCell(x, y);

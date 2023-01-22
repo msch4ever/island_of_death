@@ -226,4 +226,6 @@ public abstract class Animal implements Eatable, Runnable {
     public int hashCode() {
         return id.hashCode();
     }
+
+    public abstract AnimalType getType();
 }
