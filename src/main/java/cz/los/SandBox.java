@@ -1,19 +1,36 @@
 package cz.los;
 
-import cz.los.animals.AnimalFactory;
-import cz.los.animals.AnimalProperties;
-import cz.los.animals.AnimalType;
-import cz.los.config.AnimalsConfig;
-import cz.los.island.Island;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SandBox {
 
     public static void main(String[] args) {
-        AnimalFactory factory = new AnimalFactory();
-        AnimalProperties goatProps = AnimalsConfig.getInstance().getAnimalProperties().get(AnimalType.GOAT);
-        Island island = Island.getInstance();
-
-        System.out.println();
+        List<String> list = new ArrayList<>(List.of("Kek", "lol", "Karvalol"));
+        noModEx(list);
+        concurentModEx(list);
     }
 
+    private static void noModEx(List<String> list) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).equals("lol")) {
+                list.add("ololo");
+            }
+            System.out.println(list.get(i));
+        }
+        System.out.println("LOL!! NO CONCURRENT MOD EXCEPTION. I TOLD YOU!!!");
+    }
+
+    private static void concurentModEx(List<String> list) {
+        try {
+            for (String s : list) {
+                if (s.equals("lol")) {
+                    list.add("ololo");
+                }
+                System.out.println(s);
+            }
+        } catch (Exception e) {
+            System.out.println("KEK! HERE WAS CONCURRENT MOD EXCEPTION!");
+        }
+    }
 }
